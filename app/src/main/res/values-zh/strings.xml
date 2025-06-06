@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">AIPPA - 植物医生</string>
+    <string name="image_description">图片展示</string>
+    <string name="predict_btn_val">预测</string>
+    <string name="gallery_btn">打开相册</string>
+    <string name="camera_btn">打开相机</string>
+    <string name="predicted_value">预测结果</string>
+    <string name="ok_btn_pop">确定</string>
+    <string name="title_pop">弹窗标题</string>
+    <string name="text_pop">弹窗文本</string>
+    <string name="know_more">了解更多</string>
+    <string name="disease_name">疾病名称</string>
+    <string name="prediction_conf">预测置信度</string>
+    <string name="name">疾病名称</string>
+    <string name="tvCausativeAgent">病原体</string>
+    <string name="tvCause">原因</string>
+    <string name="tvSymptoms">症状</string>
+    <string name="symptoms1">症状一</string>
+    <string name="symptoms2">症状二</string>
+    <string name="symptoms3">症状三</string>
+    <string name="symptoms4">症状四</string>
+    <string name="symptoms5">症状五</string>
+    <string name="comments">评论</string>
+    <string name="tvComments1">评论一</string>
+    <string name="tvComments2">评论二</string>
+    <string name="management">管理方法</string>
+    <string name="tvManagement1">管理方法一</string>
+    <string name="tvManagement2">管理方法二</string>
+    <string name="tvManagement3">管理方法三</string>
+    <string name="tvManagement4">管理方法四</string>
+    <string name="confiPercent">置信度百分比</string>
+    <string name="title_activity_about">欢迎使用 AIPPA</string>
+    <string name="large_text">
+        "\n我们非常荣幸\n"
+        "您使用植物医生是我们的荣幸。"
+        "帮助您轻松识别几乎所有植物疾病，而且它是离线的。\n\n\n\n\n"
+
+        "\n--------------------------------帮助--------------------------------\n"
+        "拍照\n"
+        "拍摄任何植物叶子的居中、光线充足的照片\n\n"
+
+        "聚焦在目标上\n"
+        "确保焦点在被拍摄的图像上，"
+        "而不是在图像的背景上\n\n"
+
+        "注意事项\n"
+        "不要捕捉离镜头太远的叶子或不属于"
+        "目标物种的植物"
+        "\n------------------------------------------------------------------------\n"
+        "\n\n\n\n\n"
+
+        "关于 AIPPA \n"
+        "AIPPA 是 AI-Powered Plant Analyzer（人工智能植物分析器）的缩写。"
+        "它是一个具有离线图像处理能力的安卓应用程序，"
+        "内置机器学习模型。\n\n"
+        
+        "关于 LAZARUS NEPAL\n"
+        "Lazarus Nepal 是一个由三位充满热情的核心创始成员组成的团队。"
+        "Pujan、Suraj 和 Indra 是优秀的团队成员，他们梦想为这个世界做出美好的贡献。"
+        "\n\n"
+
+        "----开发者: Lazarus Nepal----"
+    </string>
+    <string name="action_settings">设置</string>
+    <string name="about_us">关于我们</string>
+    <string name="fab_setting_btn">设置</string>
+    <string name="fab_help_btn">帮助</string>
+    <string name="leaf_not_found">未找到叶子</string>
+    <string name="photo_set">您的照片已设置</string>
+    <string name="camera_cancel">相机已取消</string>
+    <string name="unrecognized_request">无法识别的请求码</string>
+    <string name="image_crop_info">图像裁剪至: 宽= %1$d 高= %2$d</string>
+    <string name="setting_under_construction">设置功能正在开发中</string>
+</resources> 
