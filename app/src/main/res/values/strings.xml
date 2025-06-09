@@ -97,4 +97,6 @@
     <string name="language_zh">Chinese</string>
     <string name="welcome_text">Welcome! Use the voice button to start.</string>
     <string name="predict_btn">Predict</string>
+    <string name="image_of_disease">Image of the disease</string>
+    <string name="search">Search</string>
 </resources>

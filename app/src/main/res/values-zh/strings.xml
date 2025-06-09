@@ -92,5 +92,7 @@
     <string name="language_zh">中文</string>
     <string name="welcome_text">欢迎！请使用语音按钮开始。</string>
     <string name="predict_btn">预测</string>
+    <string name="image_of_disease">病害图片</string>
+    <string name="search">搜索</string>
     <string name="feedback_thanks">感谢您的反馈！</string>
 </resources> 
