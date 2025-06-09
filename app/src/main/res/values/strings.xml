@@ -84,4 +84,17 @@
     <string name="disease_library">Disease Library</string>
     <string name="prediction_correct">Correct</string>
     <string name="unknown_disease">Unknown Disease</string>
+    <string name="voice_recognition">Voice Recognition</string>
+    <string name="listening">Listening...</string>
+    <string name="speech_error">Error recognizing speech</string>
+    <string name="command_not_recognized">Command not recognized: %s</string>
+    <string name="permission_denied">Permission Denied</string>
+    <string name="keyword_take_photo">take photo</string>
+    <string name="keyword_recognize">recognize</string>
+    <string name="keyword_predict">predict</string>
+    <string name="language">Language</string>
+    <string name="language_en">English</string>
+    <string name="language_zh">Chinese</string>
+    <string name="welcome_text">Welcome! Use the voice button to start.</string>
+    <string name="predict_btn">Predict</string>
 </resources>

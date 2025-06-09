@@ -11,6 +11,9 @@ import android.graphics.Matrix
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.Gravity
 import android.view.Menu
@@ -18,6 +21,8 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.lazarus.aippa_theplantdoctorbeta.databinding.ActivityMainBinding
 import java.io.IOException
 import java.util.Locale
@@ -34,6 +39,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mClassifier: Classifier
     private lateinit var mBitmap: Bitmap
+
+    // Voice Recognition
+    private val RECORD_AUDIO_PERMISSION_CODE = 101
+    private lateinit var speechRecognizer: SpeechRecognizer
 
     private val mCameraRequestCode = 0
     private val mGalleryRequestCode = 2
@@ -55,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         mClassifier = Classifier(assets, mModelPath, mLabelPath, mInputSize)
+        setupSpeechRecognizer()
 
         resources.assets.open(mSamplePath).use {
             mBitmap = BitmapFactory.decodeStream(it)
@@ -62,16 +72,8 @@ class MainActivity : AppCompatActivity() {
             binding.leafImageView.setImageBitmap(mBitmap)
         }
 //        functional buttons
-        binding.fabCamera.setOnClickListener{
-//            Log.d("\n camera!", "Camera button was clicked!\n")
-            val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(callCameraIntent, mCameraRequestCode)
-        }
-        binding.fabGallery.setOnClickListener{
-//            Log.d("\n clicked!", "Gallery button was clicked!\n")
-            val callGalleryIntent = Intent(Intent.ACTION_PICK)
-            callGalleryIntent.type = "image/*"
-            startActivityForResult(callGalleryIntent, mGalleryRequestCode)
+        binding.fabVoice.setOnClickListener {
+            checkAndRequestPermissions()
         }
         binding.fabLibrary.setOnClickListener {
             val intent = Intent(this, LibraryActivity::class.java)
@@ -116,11 +118,74 @@ class MainActivity : AppCompatActivity() {
                 toast.show()
             }
         }
+    }
 
-        binding.fabHelp.setOnClickListener(){
-            val intent = Intent(this, AboutActivity::class.java).apply {  }
-            startActivity(intent)
+    private fun setupSpeechRecognizer() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+        speechRecognizer.setRecognitionListener(object : RecognitionListener {
+            override fun onReadyForSpeech(params: Bundle?) {}
+            override fun onBeginningOfSpeech() {
+                Toast.makeText(this@MainActivity, getString(R.string.listening), Toast.LENGTH_SHORT).show()
+            }
+            override fun onRmsChanged(rmsdB: Float) {}
+            override fun onBufferReceived(buffer: ByteArray?) {}
+            override fun onEndOfSpeech() {}
+            override fun onError(error: Int) {
+                Log.e("SpeechRecognizer", "Error: $error")
+                Toast.makeText(this@MainActivity, getString(R.string.speech_error), Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResults(results: Bundle?) {
+                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (matches != null && matches.isNotEmpty()) {
+                    val spokenText = matches[0].lowercase(Locale.getDefault())
+                    Log.d("SpokenText", spokenText)
+                    if (spokenText.contains(getString(R.string.keyword_take_photo))) {
+                        openCamera()
+                    } else if (spokenText.contains(getString(R.string.keyword_recognize))) {
+                        openGallery()
+                    } else if (spokenText.contains(getString(R.string.keyword_predict))) {
+                        binding.detectBtn.performClick()
+                    } else {
+                        Toast.makeText(this@MainActivity, getString(R.string.command_not_recognized, spokenText), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            override fun onPartialResults(partialResults: Bundle?) {}
+            override fun onEvent(eventType: Int, params: Bundle?) {}
+        })
+    }
+
+    private fun checkAndRequestPermissions() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_CODE)
+        } else {
+            startSpeechToText()
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == RECORD_AUDIO_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                startSpeechToText()
+            } else {
+                Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun startSpeechToText() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.listening))
+        speechRecognizer.startListening(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        speechRecognizer.destroy()
     }
 
     // 创建选项菜单，添加语言切换选项
@@ -230,5 +295,16 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
         return file.absolutePath
+    }
+
+    private fun openCamera() {
+        val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(callCameraIntent, mCameraRequestCode)
+    }
+
+    private fun openGallery() {
+        val callGalleryIntent = Intent(Intent.ACTION_PICK)
+        callGalleryIntent.type = "image/*"
+        startActivityForResult(callGalleryIntent, mGalleryRequestCode)
     }
 } 

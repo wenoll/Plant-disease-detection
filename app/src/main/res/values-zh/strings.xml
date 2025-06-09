@@ -79,4 +79,18 @@
     <string name="disease_library">病害百科</string>
     <string name="prediction_correct">正确</string>
     <string name="unknown_disease">未知病害</string>
+    <string name="voice_recognition">语音识别</string>
+    <string name="listening">正在聆听...</string>
+    <string name="speech_error">语音识别失败</string>
+    <string name="command_not_recognized">无法识别指令: %s</string>
+    <string name="permission_denied">权限被拒绝</string>
+    <string name="keyword_take_photo">拍照</string>
+    <string name="keyword_recognize">识别</string>
+    <string name="keyword_predict">预测</string>
+    <string name="language">语言</string>
+    <string name="language_en">English</string>
+    <string name="language_zh">中文</string>
+    <string name="welcome_text">欢迎！请使用语音按钮开始。</string>
+    <string name="predict_btn">预测</string>
+    <string name="feedback_thanks">感谢您的反馈！</string>
 </resources> 

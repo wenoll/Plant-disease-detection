@@ -3,17 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_language"
-        android:title="Language/语言"
+        android:title="@string/language"
         app:showAsAction="never">
         <menu>
             <item
                 android:id="@+id/menu_language_en"
-                android:title="English"
-                app:showAsAction="never" />
+                android:title="@string/language_en" />
             <item
                 android:id="@+id/menu_language_zh"
-                android:title="中文"
-                app:showAsAction="never" />
+                android:title="@string/language_zh" />
         </menu>
     </item>
 </menu> 
