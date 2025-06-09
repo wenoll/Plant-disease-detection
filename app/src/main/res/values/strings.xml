@@ -29,7 +29,7 @@
     <string name="tvManagement3">Third Management</string>
     <string name="tvManagement4">Forth Management</string>
     <string name="confiPercent">Confidence Percentage</string>
-    <string name="title_activity_about">Welcome! AIPPA</string>
+    <string name="title_activity_about">About</string>
     <string name="large_text">
         "\nWE ARE HONORED\n"
         "Your presence in AIPPA - The Plant Doctor is our honor."
@@ -69,9 +69,19 @@
     
     <!-- 添加缺少的字符串资源 -->
     <string name="leaf_not_found">Leaf not found</string>
-    <string name="photo_set">Your photo image set now</string>
-    <string name="camera_cancel">Camera cancelled</string>
+    <string name="photo_set">Your photo is set</string>
+    <string name="camera_cancel">Taking a photo is canceled</string>
     <string name="unrecognized_request">Unrecognized request code</string>
     <string name="image_crop_info">Image crop to: w= %1$d h= %2$d</string>
     <string name="setting_under_construction">Setting is under construction</string>
+    <string name="healthy_plant_description">This plant is healthy!</string>
+    <string name="prediction_incorrect">Incorrect</string>
+    <string name="feedback_thanks">Thank you for your feedback!</string>
+    <string name="image_of_plant">Image of the plant</string>
+    <string name="title_activity_history">Prediction History</string>
+    <string name="prediction_history">Prediction History</string>
+    <string name="title_activity_library">Disease Library</string>
+    <string name="disease_library">Disease Library</string>
+    <string name="prediction_correct">Correct</string>
+    <string name="unknown_disease">Unknown Disease</string>
 </resources>

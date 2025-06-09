@@ -21,6 +21,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.lazarus.aippa_theplantdoctorbeta.databinding.ActivityMainBinding
 import java.io.IOException
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class MainActivity : AppCompatActivity() {
 
@@ -66,24 +73,44 @@ class MainActivity : AppCompatActivity() {
             callGalleryIntent.type = "image/*"
             startActivityForResult(callGalleryIntent, mGalleryRequestCode)
         }
+        binding.fabLibrary.setOnClickListener {
+            val intent = Intent(this, LibraryActivity::class.java)
+            startActivity(intent)
+        }
+        binding.fabHistory.setOnClickListener {
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
+        }
         binding.detectBtn.setOnClickListener{
-//            Log.d("\n clicked!", "Detect button was clicked!\n")
             val results = mClassifier.recognizeImage(mBitmap).firstOrNull()
-//            predictedTextView.text= "Name: "+results?.title+"\n Confidence: "+confidencePer
-//            Log.d("predicted Result", "\n Disease Name: " + results.title + "\n Confidence: " + confidencePer + " %")
-
-//            if prediction result is empty process  could not be processed
             if (results != null) {
-                val confidencePer = 100* results?.confidence!!
-                val intentDetailsActivity = Intent(this, DetailsActivity::class.java).apply{
-                    putExtra("titleN", getString(R.string.predicted_value))
-                    putExtra("diseaseName", results.title)
-                    putExtra("prediction_confidence", "(${getString(R.string.prediction_conf)} $confidencePer %)")
-                //  putExtra("pictureCapture", bitmapData)
+                // 保存图片并获取路径
+                val imagePath = saveImageToInternalStorage(mBitmap)
+                
+                // 启动一个协程来执行数据库插入
+                GlobalScope.launch(Dispatchers.IO) {
+                    val historyDao = AppDatabase.getDatabase(applicationContext).predictionHistoryDao()
+                    val newHistoryRecord = PredictionHistory(
+                        diseaseName = results.title,
+                        confidence = results.confidence,
+                        timestamp = System.currentTimeMillis(),
+                        imagePath = imagePath
+                    )
+                    val historyId = historyDao.insert(newHistoryRecord)
+
+                    // 在主线程启动Activity
+                    launch(Dispatchers.Main) {
+                        val confidencePer = 100 * results.confidence
+                        val intentDetailsActivity = Intent(this@MainActivity, DetailsActivity::class.java).apply {
+                            putExtra("historyId", historyId) // 传递历史记录ID
+                            putExtra("diseaseName", results.title)
+                            putExtra("prediction_confidence", "(${getString(R.string.prediction_conf)} $confidencePer %)")
+                        }
+                        Toast.makeText(this@MainActivity, getString(R.string.predict_btn_val), Toast.LENGTH_SHORT).show()
+                        startActivity(intentDetailsActivity)
+                    }
                 }
-                Toast.makeText(this, getString(R.string.predict_btn_val), Toast.LENGTH_SHORT).show()
-                startActivity(intentDetailsActivity)
-            } else{
+            } else {
                 val toast = Toast.makeText(this, getString(R.string.leaf_not_found), Toast.LENGTH_LONG)
                 toast.setGravity(Gravity.CENTER, 0, 0)
                 toast.show()
@@ -91,8 +118,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fabHelp.setOnClickListener(){
-            val intent = Intent(this, AboutActivity::class.java).apply {
-            }
+            val intent = Intent(this, AboutActivity::class.java).apply {  }
             startActivity(intent)
         }
     }
@@ -190,4 +216,19 @@ class MainActivity : AppCompatActivity() {
         matrix.postScale(scaleWidth, scaleHeight)
         return Bitmap.createBitmap(bitmap, 0, 0, orignalWidth, originalHeight, matrix, true)
     }
-}
+
+    private fun saveImageToInternalStorage(bitmap: Bitmap): String {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val fileName = "PlantDoc_$timeStamp.jpg"
+        val file = File(filesDir, fileName)
+        try {
+            val stream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.flush()
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return file.absolutePath
+    }
+} 
