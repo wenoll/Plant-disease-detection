@@ -9,6 +9,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AIPPAThePlantDoctorBETA">
         <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about"
+            android:exported="false"
+            android:theme="@style/Theme.AIPPAThePlantDoctorBETA.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".DetailsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
