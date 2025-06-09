@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <queries>
+        <intent>
+            <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -8,15 +16,6 @@
         android:roundIcon="@mipmap/ic_lazarus_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.AIPPAThePlantDoctorBETA">
-        <activity
-            android:name=".AboutActivity"
-            android:label="@string/title_activity_about"
-            android:exported="false"
-            android:theme="@style/Theme.AIPPAThePlantDoctorBETA.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
         <activity
             android:name=".LibraryActivity"
             android:exported="false"

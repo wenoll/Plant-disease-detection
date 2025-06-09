@@ -7,17 +7,6 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/predictedTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/predicted_value"
-        app:layout_constraintBottom_toTopOf="@+id/detect_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/leafImageView" />
-
     <ImageView
         android:id="@+id/leafImageView"
         android:layout_width="408dp"
@@ -34,7 +23,7 @@
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
-        android:text="@string/predict_btn_val"
+        android:text="@string/predict_btn"
         app:backgroundTint="#009688"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,61 +33,19 @@
         app:rippleColor="@color/white"
         app:strokeColor="#FFFFFF" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_camera"
-        android:layout_width="56dp"
+    <TextView
+        android:id="@+id/predictedTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:contentDescription="@string/gallery_btn"
-        android:focusable="true"
-        app:backgroundTint="#009688"
-        app:layout_constraintBottom_toBottomOf="@+id/fab_gallery"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="@string/welcome_text"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:contentDescription="@string/camera_btn"
-        android:focusable="true"
-        android:visibility="visible"
-        app:backgroundTint="#4CAF50"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/fab_camera"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:backgroundTint="#4CAF50"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/fab_camera"
-        app:srcCompat="@android:drawable/ic_menu_help"
-        android:contentDescription="@string/fab_help_btn" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_library"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/disease_library"
-        app:layout_constraintBottom_toTopOf="@+id/fab_help"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_library_book" />
+        app:layout_constraintTop_toBottomOf="@+id/detectBtn" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_history"
@@ -106,9 +53,37 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:clickable="true"
         android:contentDescription="@string/prediction_history"
-        app:layout_constraintBottom_toTopOf="@+id/fab_library"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_history" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="@string/voice_recognition"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/fab_history"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_mic" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_library"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="@string/disease_library"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/fab_voice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_library_book" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
