@@ -106,4 +106,4 @@ class Classifier(assetManager: AssetManager, modelPath: String, labelPath: Strin
         }
         return recognitions
     }
-}
+} 

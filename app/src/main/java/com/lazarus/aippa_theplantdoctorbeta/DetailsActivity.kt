@@ -57,55 +57,70 @@ class DetailsActivity : AppCompatActivity() {
         val bundle = intent.extras
         title = bundle?.getString("titleN", "Title") ?: ""
         diseaseName = bundle?.getString("diseaseName", "Disease Name") ?: ""
-        predictionConfidence = bundle?.getString("prediction_confidence", "Unknown %") ?: ""
+        predictionConfidence = bundle?.getString("prediction_confidence") ?: ""
 //        pictureCapture = bundle?.getByteArray("pictureCapture")!!
 
         confPerStr = predictionConfidence
         diseaseNameStr = diseaseName
 
-//        Read JSON formatted file and write it into classified ArrayList format
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        val linearLayoutManager = LinearLayoutManager(applicationContext)
-        recyclerView.layoutManager = linearLayoutManager
+        val historyId = intent.getLongExtra("historyId", -1L)
+
+        val modelList = ArrayList<Model>()
+        val recyclerView = binding.recyclerView
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
         try {
             val obj = JSONObject(loadJSONFromAsset())
             val diseaseArray = obj.getJSONArray("disease")
+            var found = false
             for (i in 0 until diseaseArray.length()){
                 val diseaseDetail = diseaseArray.getJSONObject(i)
-                if(diseaseDetail.getString("name")==diseaseNameStr){
-                    diseaseNameJSON.add(diseaseDetail.getString("name"))
-                    causativeAgentJSON.add(diseaseDetail.getString("causative_agent"))
-                    causeJSON.add(diseaseDetail.getString("cause"))
-
+                if(diseaseDetail.getString("name").trim().equals(diseaseName?.trim(), ignoreCase = true)){
                     val symptomsDetails = diseaseDetail.getJSONObject("symptoms")
-                    symptoms1JSON.add(symptomsDetails.getString("1"))
-                    symptoms2JSON.add(symptomsDetails.getString("2"))
-                    symptoms3JSON.add(symptomsDetails.getString("3"))
-                    symptoms4JSON.add(symptomsDetails.getString("3"))
-                    symptoms5JSON.add(symptomsDetails.getString("5"))
-
                     val commentsDetails = diseaseDetail.getJSONObject("comments")
-                    comments1JSON.add(commentsDetails.getString("1"))
-                    comments2JSON.add(commentsDetails.getString("2"))
-
                     val managementDetails = diseaseDetail.getJSONObject("management")
-                    management1JSON.add(managementDetails.getString("1"))
-                    management2JSON.add(managementDetails.getString("2"))
-                    management3JSON.add(managementDetails.getString("3"))
-                    management4JSON.add(managementDetails.getString("4"))
+
+                    val m = Model(
+                        diseaseDetail.getString("name"),
+                        diseaseDetail.getString("causative_agent"),
+                        diseaseDetail.getString("cause"),
+                        symptomsDetails.optString("1", ""),
+                        symptomsDetails.optString("2", ""),
+                        symptomsDetails.optString("3", ""),
+                        symptomsDetails.optString("4", ""),
+                        symptomsDetails.optString("5", ""),
+                        commentsDetails.optString("1", ""),
+                        commentsDetails.optString("2", ""),
+                        managementDetails.optString("1", ""),
+                        managementDetails.optString("2", ""),
+                        managementDetails.optString("3", ""),
+                        managementDetails.optString("4", "")
+                    )
+                    modelList.add(m)
+                    found = true
                     break
                 }
             }
+            if (!found) {
+                 val m = Model(
+                    diseaseName ?: getString(R.string.unknown_disease),
+                    "", "", getString(R.string.healthy_plant_description), "", "", "", "", "", "", "", "", "", ""
+                )
+                modelList.add(m)
+            }
+
         } catch (e: JSONException){
             e.printStackTrace()
         }
 
-//        send data for dynamic view via CustomAdapter constructor
-        val customAdapter = CustomAdapter(this@DetailsActivity,
-                diseaseNameJSON, diseaseNameStr,  confPerStr, causativeAgentJSON, causeJSON, symptoms1JSON,
-        symptoms2JSON, symptoms3JSON, symptoms4JSON, symptoms5JSON, comments1JSON, comments2JSON,
-        management1JSON, management2JSON, management3JSON, management4JSON)
-        recyclerView.adapter = customAdapter
+        val adapter = CustomAdapter(
+            this,
+            modelList,
+            diseaseName ?: "Unknown",
+            predictionConfidence,
+            historyId
+        )
+        recyclerView.adapter = adapter
     }
 
     private fun loadJSONFromAsset(): String{
@@ -130,4 +145,4 @@ class DetailsActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
-}
+} 

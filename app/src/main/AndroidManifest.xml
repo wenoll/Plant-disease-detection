@@ -18,6 +18,14 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
+            android:name=".LibraryActivity"
+            android:exported="false"
+            android:label="@string/title_activity_library" />
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false"
+            android:label="@string/title_activity_history" />
+        <activity
             android:name=".DetailsActivity"
             android:exported="false">
             <meta-data
