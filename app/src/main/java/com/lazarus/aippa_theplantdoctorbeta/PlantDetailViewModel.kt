@@ -6,18 +6,35 @@ import kotlinx.coroutines.launch
 
 class PlantDetailViewModel(application: Application, private val plantId: Long) : AndroidViewModel(application) {
 
-    private val plantDao: PlantDao = AppDatabase.getDatabase(application).plantDao()
-    private val gardenLogDao: GardenLogDao = AppDatabase.getDatabase(application).gardenLogDao()
+    private val repository: PlantRepository
+    
+    val plant: LiveData<Plant>
+    val logs: LiveData<List<GardenLog>>
 
-    val plant: LiveData<Plant> = liveData {
-        emit(plantDao.getPlant(plantId)!!)
+    init {
+        val database = AppDatabase.getDatabase(application)
+        val plantDao = database.plantDao()
+        val predictionHistoryDao = database.predictionHistoryDao()
+        val gardenLogDao = database.gardenLogDao()
+        repository = PlantRepository(plantDao, predictionHistoryDao, gardenLogDao)
+        
+        plant = liveData {
+            emit(repository.getPlant(plantId)!!)
+        }
+        logs = repository.getLogsForPlant(plantId)
     }
-
-    val logs: LiveData<List<GardenLog>> = gardenLogDao.getLogsForPlant(plantId)
 
     fun addLog(log: GardenLog) {
         viewModelScope.launch {
-            gardenLogDao.insert(log)
+            repository.insertGardenLog(log)
+        }
+    }
+
+    fun deletePlant() {
+        viewModelScope.launch {
+            plant.value?.let {
+                repository.delete(it)
+            }
         }
     }
 }

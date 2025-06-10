@@ -1,73 +1,72 @@
 package com.lazarus.aippa_theplantdoctorbeta
 
 import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import java.io.File
+import coil.load
+import com.lazarus.aippa_theplantdoctorbeta.databinding.ListItemHistoryBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+class HistoryAdapter(
+    private val onDeleteClick: (PredictionHistory) -> Unit
+) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     private var historyList = emptyList<PredictionHistory>()
 
-    inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.historyImageView)
-        val diseaseNameView: TextView = itemView.findViewById(R.id.historyDiseaseNameTextView)
-        val confidenceView: TextView = itemView.findViewById(R.id.historyConfidenceTextView)
-        val timestampView: TextView = itemView.findViewById(R.id.historyTimestampTextView)
-        val feedbackIcon: ImageView = itemView.findViewById(R.id.feedbackIcon)
+    inner class HistoryViewHolder(private val binding: ListItemHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(currentItem: PredictionHistory) {
+            binding.historyDiseaseNameTextView.text = currentItem.diseaseName
+            val confidencePercent = "%.2f".format(currentItem.confidence * 100)
+            binding.historyConfidenceTextView.text = itemView.context.getString(R.string.prediction_conf) + " $confidencePercent %"
+            
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            binding.historyTimestampTextView.text = sdf.format(Date(currentItem.timestamp))
+
+            binding.historyImageView.load(currentItem.imagePath) {
+                crossfade(true)
+                placeholder(R.drawable.ic_plant_placeholder)
+                error(R.drawable.ic_broken_image)
+            }
+
+            when (currentItem.feedback) {
+                "correct" -> {
+                    binding.feedbackIcon.setImageResource(R.drawable.ic_thumb_up)
+                    binding.feedbackIcon.visibility = View.VISIBLE
+                }
+                "incorrect" -> {
+                    binding.feedbackIcon.setImageResource(R.drawable.ic_thumb_down)
+                    binding.feedbackIcon.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.feedbackIcon.visibility = View.GONE
+                }
+            }
+
+            binding.deleteButton.setOnClickListener {
+                onDeleteClick(currentItem)
+            }
+
+            itemView.setOnClickListener {
+                val context = itemView.context
+                val intent = Intent(context, DetailsActivity::class.java).apply {
+                    putExtra(DetailsActivity.EXTRA_HISTORY_ID, currentItem.id)
+                }
+                context.startActivity(intent)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_history, parent, false)
-        return HistoryViewHolder(itemView)
+        val binding = ListItemHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return HistoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val currentItem = historyList[position]
-
-        holder.diseaseNameView.text = currentItem.diseaseName
-        val confidencePercent = "%.2f".format(currentItem.confidence * 100)
-        holder.confidenceView.text = holder.itemView.context.getString(R.string.prediction_conf) + " $confidencePercent %"
-        
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        holder.timestampView.text = sdf.format(Date(currentItem.timestamp))
-
-        val imgFile = File(currentItem.imagePath)
-        if (imgFile.exists()) {
-            holder.imageView.setImageURI(Uri.fromFile(imgFile))
-        }
-
-        when (currentItem.feedback) {
-            "correct" -> {
-                holder.feedbackIcon.setImageResource(R.drawable.ic_thumb_up)
-                holder.feedbackIcon.visibility = View.VISIBLE
-            }
-            "incorrect" -> {
-                holder.feedbackIcon.setImageResource(R.drawable.ic_thumb_down)
-                holder.feedbackIcon.visibility = View.VISIBLE
-            }
-            else -> {
-                holder.feedbackIcon.visibility = View.GONE
-            }
-        }
-
-        holder.itemView.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = Intent(context, DetailsActivity::class.java).apply {
-                putExtra("historyId", currentItem.id)
-                putExtra("diseaseName", currentItem.diseaseName)
-                putExtra("prediction_confidence", "${context.getString(R.string.prediction_conf)} $confidencePercent %")
-            }
-            context.startActivity(intent)
-        }
+        holder.bind(historyList[position])
     }
 
     override fun getItemCount() = historyList.size

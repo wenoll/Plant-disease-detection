@@ -15,6 +15,10 @@ class PlantRepository(
         plantDao.insert(plant)
     }
 
+    suspend fun delete(plant: Plant) {
+        plantDao.delete(plant)
+    }
+
     suspend fun insertPrediction(history: PredictionHistory): Long {
         return predictionHistoryDao.insert(history)
     }

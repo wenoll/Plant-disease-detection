@@ -63,5 +63,15 @@
             tools:srcCompat="@drawable/ic_thumb_up"
             xmlns:tools="http://schemas.android.com/tools" />
 
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_delete"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView> 

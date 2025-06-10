@@ -11,6 +11,10 @@ import java.util.Locale
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import com.lazarus.aippa_theplantdoctorbeta.databinding.DialogAddLogBinding
+import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
+import coil.load
 
 class PlantDetailActivity : AppCompatActivity() {
 
@@ -65,6 +69,13 @@ class PlantDetailActivity : AppCompatActivity() {
                 binding.tvPlantVarietyDetail.text = it.variety
                 binding.tvPlantLocationDetail.text = it.location
                 binding.tvPlantDateDetail.text = getString(R.string.plant_detail_planted_on, dateFormatter.format(Date(it.plantingDate)))
+
+                it.imagePath?.let { path ->
+                    binding.ivPlantHeaderImage.load(path) {
+                        crossfade(true)
+                        error(R.drawable.ic_broken_image)
+                    }
+                } ?: binding.ivPlantHeaderImage.setImageResource(R.drawable.ic_plant_placeholder)
             }
         }
 
@@ -120,5 +131,38 @@ class PlantDetailActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_plant_detail, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_edit_plant -> {
+                val intent = Intent(this, AddEditPlantActivity::class.java)
+                intent.putExtra(AddEditPlantActivity.EXTRA_PLANT_ID, plantId)
+                startActivity(intent)
+                true
+            }
+            R.id.action_delete_plant -> {
+                showDeleteConfirmationDialog()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.dialog_delete_plant_title)
+            .setMessage(R.string.dialog_delete_plant_message)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                viewModel.deletePlant()
+                finish() // Close the detail view after deletion
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 } 

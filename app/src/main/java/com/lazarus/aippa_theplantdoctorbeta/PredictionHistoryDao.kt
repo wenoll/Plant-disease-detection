@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Delete
 
 @Dao
 interface PredictionHistoryDao {
@@ -21,11 +22,11 @@ interface PredictionHistoryDao {
     @Query("UPDATE history_table SET feedback = :feedback WHERE id = :id")
     suspend fun updateFeedback(id: Long, feedback: String)
 
-    @Query("DELETE FROM history_table WHERE id = :id")
-    suspend fun delete(id: Long)
+    @Delete
+    suspend fun delete(history: PredictionHistory)
 
     @Query("SELECT * from history_table WHERE id = :id")
-    suspend fun get(id: Long): PredictionHistory?
+    suspend fun getHistoryById(id: Long): PredictionHistory?
 
     @Query("DELETE FROM history_table")
     suspend fun clear()
