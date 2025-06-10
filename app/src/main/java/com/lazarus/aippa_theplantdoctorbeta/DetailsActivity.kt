@@ -16,6 +16,10 @@ class DetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailsBinding
 
+    companion object {
+        const val EXTRA_DISEASE_NAME = "diseaseName"
+    }
+
 //    JSON
     private val jsonFileName: String
         get() {
@@ -56,7 +60,7 @@ class DetailsActivity : AppCompatActivity() {
 
         val bundle = intent.extras
         title = bundle?.getString("titleN", "Title") ?: ""
-        diseaseName = bundle?.getString("diseaseName", "Disease Name") ?: ""
+        diseaseName = bundle?.getString(EXTRA_DISEASE_NAME, "Disease Name") ?: ""
         predictionConfidence = bundle?.getString("prediction_confidence") ?: ""
 //        pictureCapture = bundle?.getByteArray("pictureCapture")!!
 

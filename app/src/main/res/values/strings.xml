@@ -67,9 +67,9 @@
     <string name="fab_setting_btn">Setting</string>
     <string name="fab_help_btn">Help</string>
     
-    <!-- 添加缺少的字符串资源 -->
-    <string name="leaf_not_found">Leaf not found</string>
-    <string name="photo_set">Your photo is set</string>
+    <!-- Essential Strings -->
+    <string name="leaf_not_found">"Couldn't find a leaf. Please try another angle or image."</string>
+    <string name="photo_set">Photo is set! You can now press \'Detect\'.</string>
     <string name="camera_cancel">Taking a photo is canceled</string>
     <string name="unrecognized_request">Unrecognized request code</string>
     <string name="image_crop_info">Image crop to: w= %1$d h= %2$d</string>
@@ -79,24 +79,66 @@
     <string name="feedback_thanks">Thank you for your feedback!</string>
     <string name="image_of_plant">Image of the plant</string>
     <string name="title_activity_history">Prediction History</string>
-    <string name="prediction_history">Prediction History</string>
+    <string name="prediction_history">History</string>
     <string name="title_activity_library">Disease Library</string>
-    <string name="disease_library">Disease Library</string>
+    <string name="disease_library">Encyclopedia</string>
+    <string name="my_garden">My Garden</string>
+    <string name="garden_empty_message">Your garden is empty. Add a new plant to start!</string>
     <string name="prediction_correct">Correct</string>
     <string name="unknown_disease">Unknown Disease</string>
-    <string name="voice_recognition">Voice Recognition</string>
-    <string name="listening">Listening...</string>
-    <string name="speech_error">Error recognizing speech</string>
-    <string name="command_not_recognized">Command not recognized: %s</string>
-    <string name="permission_denied">Permission Denied</string>
-    <string name="keyword_take_photo">take photo</string>
-    <string name="keyword_recognize">recognize</string>
-    <string name="keyword_predict">predict</string>
+    <string name="plant_detail_activity_log">Activity Log</string>
+    <string name="plant_detail_planted_on">Planted on: %s</string>
+    <string name="hint_plant_name">Plant Name (e.g., Living Room Fiddle Leaf)</string>
+    <string name="hint_plant_variety">Plant Variety (e.g., Ficus lyrata)</string>
+    <string name="hint_plant_location">Location (e.g., Near south-facing window)</string>
+    <string name="btn_save_plant">Save Plant</string>
+    <string name="title_add_plant">Add New Plant</string>
+    <string name="title_activity_plant_detail">Plant Details</string>
+    <string name="dialog_title_log_activity">Log Activity</string>
+    <string name="hint_log_description">Description (e.g., Watered with 500ml)</string>
+    <string-array name="activity_type_array">
+        <item>Watering</item>
+        <item>Fertilizing</item>
+        <item>Pruning</item>
+        <item>Treatment</item>
+        <item>Note</item>
+    </string-array>
     <string name="language">Language</string>
     <string name="language_en">English</string>
-    <string name="language_zh">Chinese</string>
-    <string name="welcome_text">Welcome! Use the voice button to start.</string>
-    <string name="predict_btn">Predict</string>
+    <string name="language_zh">中文</string>
+    <string name="welcome_text">Welcome! Point the camera at a leaf.</string>
+    <string name="no_image_to_predict">Please select an image first before prediction.</string>
+    <string name="predict_btn">Detect</string>
     <string name="image_of_disease">Image of the disease</string>
     <string name="search">Search</string>
+    <string name="report_title">Annual Report</string>
+    <string name="report_disease_frequency_title">Annual Disease Frequency</string>
+    <string name="report_disease_frequency_subtitle">A summary of all diagnosed diseases this year.</string>
+    <string name="report_analysis_title">Analysis and Suggestions</string>
+    <string name="action_generate_report">Generate Annual Report</string>
+    <string name="annual_report_title">Annual Report</string>
+    <string name="disease_frequency_by_month">Disease Frequency by Month</string>
+    <string name="total_diagnoses">Total Diagnoses</string>
+    <string name="most_frequent_disease">Most Frequent Disease</string>
+    <string name="no_data_available">No Data Available</string>
+    <string name="gallery">Gallery</string>
+    <string name="voice_control">Voice</string>
+    <string name="encyclopedia">Encyclopedia</string>
+    <string name="history">History</string>
+    <string name="capture_image">Capture</string>
+    <string name="speech_recognition_not_available">Speech recognition service not available on this device.</string>
+    <string name="listening">Listening...</string>
+    <string name="speech_error">Sorry, I didn\'t catch that</string>
+    <string name="keyword_predict">detect</string>
+    <string name="keyword_recognize">capture</string>
+
+    <!-- Newly added strings from zh file to fix build -->
+    <string name="command_not_recognized">Command not recognized: %s</string>
+    <string name="keyword_take_photo">take photo</string>
+    <string name="permission_denied">Permission Denied</string>
+    <string name="voice_recognition">Voice Recognition</string>
+
+    <!-- Permission Handling -->
+    <string name="camera_permission_required">Camera permission is required to use this feature. Please grant permission in settings.</string>
+    <string name="camera_permission_required_toast">Camera permission is needed to use the live camera. You can grant it in the app settings.</string>
 </resources>

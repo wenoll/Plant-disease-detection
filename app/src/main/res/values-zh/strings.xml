@@ -77,11 +77,31 @@
     <string name="prediction_history">预测历史</string>
     <string name="title_activity_library">病害百科</string>
     <string name="disease_library">病害百科</string>
+    <string name="my_garden">我的花园</string>
+    <string name="garden_empty_message">您的花园是空的。添加一株新植物来开始吧！</string>
     <string name="prediction_correct">正确</string>
     <string name="unknown_disease">未知病害</string>
+    <string name="plant_detail_activity_log">活动日志</string>
+    <string name="plant_detail_planted_on">种植于: %s</string>
+    <string name="hint_plant_name">植物名称（如：客厅的琴叶榕）</string>
+    <string name="hint_plant_variety">植物品种（如：琴叶榕）</string>
+    <string name="hint_plant_location">位置（如：靠近朝南的窗户）</string>
+    <string name="btn_save_plant">保存植物</string>
+    <string name="title_add_plant">添加新植物</string>
+    <string name="title_activity_plant_detail">植物详情</string>
+    <string name="dialog_title_log_activity">记录活动</string>
+    <string name="hint_log_description">描述（例如：浇了500毫升水）</string>
+    <string-array name="activity_type_array">
+        <item>浇水</item>
+        <item>施肥</item>
+        <item>修剪</item>
+        <item>治疗</item>
+        <item>笔记</item>
+    </string-array>
     <string name="voice_recognition">语音识别</string>
     <string name="listening">正在聆听...</string>
     <string name="speech_error">语音识别失败</string>
+    <string name="speech_recognition_not_available">此设备上没有可用的语音识别服务。</string>
     <string name="command_not_recognized">无法识别指令: %s</string>
     <string name="permission_denied">权限被拒绝</string>
     <string name="keyword_take_photo">拍照</string>
@@ -90,9 +110,15 @@
     <string name="language">语言</string>
     <string name="language_en">English</string>
     <string name="language_zh">中文</string>
-    <string name="welcome_text">欢迎！请使用语音按钮开始。</string>
+    <string name="welcome_text">拍照或选择照片以开始</string>
+    <string name="no_image_to_predict">请先选择图片再进行预测。</string>
     <string name="predict_btn">预测</string>
     <string name="image_of_disease">病害图片</string>
     <string name="search">搜索</string>
     <string name="feedback_thanks">感谢您的反馈！</string>
+    <string name="report_title">年度报告</string>
+    <string name="report_disease_frequency_title">年度病害频率</string>
+    <string name="report_disease_frequency_subtitle">本年度所有诊断出的病害摘要。</string>
+    <string name="report_analysis_title">分析与建议</string>
+    <string name="action_generate_report">生成年度报告</string>
 </resources> 

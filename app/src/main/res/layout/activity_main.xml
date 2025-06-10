@@ -4,86 +4,233 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#FAFAFA"
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/leafImageView"
-        android:layout_width="408dp"
-        android:layout_height="502dp"
-        android:contentDescription="@string/image_description"
+        android:id="@+id/mPhotoImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/placeholder_bg"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        app:srcCompat="@drawable/ic_plant_placeholder"
+        android:contentDescription="@string/image_of_plant"/>
 
     <Button
         android:id="@+id/detect_btn"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:text="@string/predict_btn"
+        android:textAllCaps="false"
+        android:textSize="18sp"
         app:backgroundTint="#009688"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cornerRadius="24dp"
+        app:layout_constraintTop_toBottomOf="@id/mPhotoImageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/leafImageView"
-        app:rippleColor="@color/white"
-        app:strokeColor="#FFFFFF" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/predictedTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/welcome_text"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/detect_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detectBtn" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Action Buttons (Speed Dial) -->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="@string/action_settings"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add" />
+
+    <!-- Sub FABs -->
+
+    <!-- Garden -->
+    <TextView
+        android:id="@+id/label_garden"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/fab_label_background"
+        android:padding="6dp"
+        android:text="@string/my_garden"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_garden"
+        app:layout_constraintEnd_toStartOf="@+id/fab_garden"
+        app:layout_constraintTop_toTopOf="@+id/fab_garden" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_garden"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/fab_main"
+        app:layout_constraintEnd_toEndOf="@+id/fab_main"
+        app:layout_constraintStart_toStartOf="@+id/fab_main"
+        app:srcCompat="@drawable/ic_plant_placeholder" />
+
+    <!-- History -->
+    <TextView
+        android:id="@+id/label_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/fab_label_background"
+        android:padding="6dp"
+        android:text="@string/prediction_history"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_history"
+        app:layout_constraintEnd_toStartOf="@+id/fab_history"
+        app:layout_constraintTop_toTopOf="@+id/fab_history" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:contentDescription="@string/prediction_history"
-        android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/fab_garden"
+        app:layout_constraintEnd_toEndOf="@+id/fab_garden"
+        app:layout_constraintStart_toStartOf="@+id/fab_garden"
         app:srcCompat="@drawable/ic_history" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_voice"
+    <!-- Library -->
+    <TextView
+        android:id="@+id/label_library"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:contentDescription="@string/voice_recognition"
-        android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/fab_history"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_mic" />
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/fab_label_background"
+        android:padding="6dp"
+        android:text="@string/disease_library"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_library"
+        app:layout_constraintEnd_toStartOf="@+id/fab_library"
+        app:layout_constraintTop_toTopOf="@+id/fab_library" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_library"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:contentDescription="@string/disease_library"
-        android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/fab_voice"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/fab_history"
+        app:layout_constraintEnd_toEndOf="@+id/fab_history"
+        app:layout_constraintStart_toStartOf="@+id/fab_history"
         app:srcCompat="@drawable/ic_library_book" />
+
+    <!-- Voice -->
+    <TextView
+        android:id="@+id/label_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/fab_label_background"
+        android:padding="6dp"
+        android:text="@string/voice_recognition"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_voice"
+        app:layout_constraintEnd_toStartOf="@+id/fab_voice"
+        app:layout_constraintTop_toTopOf="@+id/fab_voice" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/fab_library"
+        app:layout_constraintEnd_toEndOf="@+id/fab_library"
+        app:layout_constraintStart_toStartOf="@+id/fab_library"
+        app:srcCompat="@drawable/ic_mic" />
+
+    <!-- Gallery -->
+    <TextView
+        android:id="@+id/label_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/fab_label_background"
+        android:padding="6dp"
+        android:text="@string/gallery_btn"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_gallery"
+        app:layout_constraintEnd_toStartOf="@+id/fab_gallery"
+        app:layout_constraintTop_toTopOf="@+id/fab_gallery" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/fab_voice"
+        app:layout_constraintEnd_toEndOf="@+id/fab_voice"
+        app:layout_constraintStart_toStartOf="@+id/fab_voice"
+        app:srcCompat="@drawable/ic_gallery" />
+
+    <!-- Camera -->
+    <TextView
+        android:id="@+id/label_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/fab_label_background"
+        android:padding="6dp"
+        android:text="@string/camera_btn"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_camera"
+        app:layout_constraintEnd_toStartOf="@+id/fab_camera"
+        app:layout_constraintTop_toTopOf="@+id/fab_camera" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/fab_gallery"
+        app:layout_constraintEnd_toEndOf="@+id/fab_gallery"
+        app:layout_constraintStart_toStartOf="@+id/fab_gallery"
+        app:srcCompat="@drawable/ic_camera" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
