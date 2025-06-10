@@ -31,6 +31,24 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <ImageView
+                android:id="@+id/iv_plant_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_plant_placeholder"
+                android:background="@color/material_grey_300"
+                android:contentDescription="@string/image_of_plant" />
+
+            <Button
+                android:id="@+id/btn_select_image"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:text="@string/action_add_photo" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_plant_name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

@@ -33,4 +33,21 @@
             android:minLines="3" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <ImageView
+        android:id="@+id/iv_log_image_preview"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:contentDescription="Image preview for the log" />
+
+    <Button
+        android:id="@+id/btn_add_log_image"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/action_add_photo" />
+
 </LinearLayout> 
