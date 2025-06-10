@@ -15,6 +15,9 @@ interface PredictionHistoryDao {
     @Query("SELECT * FROM history_table ORDER BY timestamp DESC")
     fun getAllHistory(): LiveData<List<PredictionHistory>>
     
+    @Query("SELECT * FROM history_table WHERE timestamp >= :sinceTimestamp ORDER BY timestamp DESC")
+    suspend fun getHistorySince(sinceTimestamp: Long): List<PredictionHistory>
+
     @Query("UPDATE history_table SET feedback = :feedback WHERE id = :id")
     suspend fun updateFeedback(id: Long, feedback: String)
 
