@@ -249,10 +249,12 @@ class MainActivity : AppCompatActivity() {
                     val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     if (matches != null && matches.isNotEmpty()) {
                         val spokenText = matches[0].lowercase(Locale.getDefault())
-                        if (spokenText.contains(getString(R.string.keyword_predict).lowercase(Locale.getDefault()))) {
-                            binding.detectBtn.performClick()
-                        } else if (spokenText.contains(getString(R.string.keyword_take_photo).lowercase(Locale.getDefault()))) {
+                        if (spokenText.contains("打开相机")) {
                             fabCamera.performClick()
+                        } else if (spokenText.contains("打开相册")) {
+                            fabGallery.performClick()
+                        } else if (spokenText.contains("开始预测")) {
+                            binding.detectBtn.performClick()
                         } else {
                             Toast.makeText(this@MainActivity, spokenText, Toast.LENGTH_LONG).show()
                         }
