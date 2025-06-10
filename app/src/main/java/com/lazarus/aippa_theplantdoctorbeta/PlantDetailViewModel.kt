@@ -9,7 +9,7 @@ class PlantDetailViewModel(application: Application, private val plantId: Long) 
     private val repository: PlantRepository
     
     val plant: LiveData<Plant>
-    val logs: LiveData<List<GardenLog>>
+    val timeline: MediatorLiveData<List<TimelineItem>> = MediatorLiveData()
 
     init {
         val database = AppDatabase.getDatabase(application)
@@ -21,13 +21,68 @@ class PlantDetailViewModel(application: Application, private val plantId: Long) 
         plant = liveData {
             emit(repository.getPlant(plantId)!!)
         }
-        logs = repository.getLogsForPlant(plantId)
+
+        val logsSource = repository.getLogsForPlant(plantId)
+        val predictionsSource = repository.getPredictionsForPlant(plantId)
+
+        var logs: List<GardenLog>? = null
+        var predictions: List<PredictionHistory>? = null
+
+        fun updateTimeline() {
+            if (logs != null && predictions != null) {
+                val predictionMap = predictions!!.associateBy { it.id }
+                val combinedList = logs!!.map { log ->
+                    if (log.activityType == ActivityType.DIAGNOSIS && log.predictionId != null) {
+                        predictionMap[log.predictionId]?.let { prediction ->
+                            TimelineItem.Diagnosis(log, prediction)
+                        } ?: TimelineItem.Log(log) // Fallback if prediction not found
+                    } else {
+                        TimelineItem.Log(log)
+                    }
+                }
+                timeline.value = combinedList
+            }
+        }
+
+        timeline.addSource(logsSource) {
+            logs = it
+            updateTimeline()
+        }
+        timeline.addSource(predictionsSource) {
+            predictions = it
+            updateTimeline()
+        }
     }
 
     fun addLog(log: GardenLog) {
         viewModelScope.launch {
             repository.insertGardenLog(log)
         }
+    }
+    
+    fun updateLog(log: GardenLog) {
+        viewModelScope.launch {
+            repository.updateGardenLog(log)
+        }
+    }
+    
+    fun deleteLog(log: GardenLog) {
+        viewModelScope.launch {
+            repository.deleteGardenLog(log)
+        }
+    }
+    
+    fun deleteDiagnosis(item: TimelineItem.Diagnosis) {
+        viewModelScope.launch {
+            // 先删除诊断记录
+            repository.deletePrediction(item.predictionHistory)
+            // 再删除对应的日志记录
+            repository.deleteGardenLog(item.gardenLog)
+        }
+    }
+    
+    suspend fun getLogById(logId: Long): GardenLog? {
+        return repository.getLogById(logId)
     }
 
     fun deletePlant() {
@@ -47,4 +102,4 @@ class PlantDetailViewModelFactory(private val application: Application, private 
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
-} 
+}

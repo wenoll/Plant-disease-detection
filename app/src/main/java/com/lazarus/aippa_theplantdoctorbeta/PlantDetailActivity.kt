@@ -17,10 +17,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.lazarus.aippa_theplantdoctorbeta.utils.ImageUtils
 import com.lazarus.aippa_theplantdoctorbeta.databinding.ActivityPlantDetailBinding
 import com.lazarus.aippa_theplantdoctorbeta.databinding.DialogAddLogBinding
+import com.lazarus.aippa_theplantdoctorbeta.databinding.DialogEditLogBinding
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -30,7 +34,7 @@ class PlantDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlantDetailBinding
     private lateinit var viewModel: PlantDetailViewModel
-    private lateinit var logAdapter: LogAdapter
+    private lateinit var timelineAdapter: TimelineAdapter
     private var plantId: Long = -1
 
     // For adding images to logs
@@ -81,11 +85,7 @@ class PlantDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        logAdapter = LogAdapter(emptyList())
-        binding.rvLogs.apply {
-            adapter = logAdapter
-            layoutManager = LinearLayoutManager(this@PlantDetailActivity)
-        }
+        binding.rvLogs.layoutManager = LinearLayoutManager(this@PlantDetailActivity)
         
         binding.fabAddLog.setOnClickListener {
             showAddLogDialog()
@@ -97,22 +97,55 @@ class PlantDetailActivity : AppCompatActivity() {
 
         viewModel.plant.observe(this) { plant ->
             plant?.let {
-                binding.toolbar.title = it.name
+                binding.collapsingToolbar.title = it.name
                 binding.tvPlantVarietyDetail.text = it.variety
                 binding.tvPlantLocationDetail.text = it.location
                 binding.tvPlantDateDetail.text = getString(R.string.plant_detail_planted_on, dateFormatter.format(Date(it.plantingDate)))
 
                 it.imagePath?.let { path ->
-                    binding.ivPlantHeaderImage.load(path) {
-                        crossfade(true)
-                        error(R.drawable.ic_broken_image)
+                    // 添加日志输出路径信息
+                    android.util.Log.d("PlantDetail", "Loading image from path: $path")
+                    try {
+                        // 判断路径是否是文件路径
+                        val file = File(path)
+                        if (file.exists()) {
+                            // 如果文件存在，直接加载文件
+                            binding.ivPlantHeaderImage.load(file) {
+                                crossfade(true)
+                                error(R.drawable.ic_broken_image)
+                            }
+                        } else {
+                            // 否则尝试将其解析为URI
+                            val uri = android.net.Uri.parse(path)
+                            binding.ivPlantHeaderImage.load(uri) {
+                                crossfade(true)
+                                error(R.drawable.ic_broken_image)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        android.util.Log.e("PlantDetail", "Error loading image: ${e.message}")
+                        binding.ivPlantHeaderImage.setImageResource(R.drawable.ic_broken_image)
                     }
                 } ?: binding.ivPlantHeaderImage.setImageResource(R.drawable.ic_plant_placeholder)
             }
         }
 
-        viewModel.logs.observe(this) { logs ->
-            logs?.let { logAdapter.updateData(it) }
+        viewModel.timeline.observe(this) { timelineItems ->
+            val adapter = TimelineAdapter(
+                onEditLog = { log -> showEditLogDialog(log) },
+                onDeleteLog = { log -> showDeleteLogConfirmation(log) },
+                onDeleteDiagnosis = { diagnosis -> showDeleteDiagnosisConfirmation(diagnosis) }
+            )
+            binding.rvLogs.adapter = adapter
+            timelineItems?.let { 
+                adapter.submitList(it)
+                
+                if (it.isEmpty()) {
+                    binding.tvNoTimelineItems.visibility = View.VISIBLE
+                } else {
+                    binding.tvNoTimelineItems.visibility = View.GONE
+                }
+            }
         }
     }
 
@@ -122,7 +155,10 @@ class PlantDetailActivity : AppCompatActivity() {
 
         val activityTypes = resources.getStringArray(R.array.activity_type_array)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, activityTypes)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         dialogBinding.spinnerActivityType.adapter = adapter
+        dialogBinding.spinnerActivityType.dropDownWidth = resources.displayMetrics.widthPixels / 2
+        dialogBinding.spinnerActivityType.dropDownVerticalOffset = 60
 
         logImageDialogCallback = { uri ->
             selectedImageUri = uri
@@ -140,13 +176,25 @@ class PlantDetailActivity : AppCompatActivity() {
             .setPositiveButton("Save") { _, _ ->
                 val description = dialogBinding.etLogDescription.text.toString().trim()
                 if (description.isNotEmpty()) {
-                    val activityType = ActivityType.values()[dialogBinding.spinnerActivityType.selectedItemPosition]
+                    val spinnerPosition = dialogBinding.spinnerActivityType.selectedItemPosition
+                    val activityType = when(spinnerPosition) {
+                        0 -> ActivityType.WATERING    // 浇水
+                        1 -> ActivityType.FERTILIZING // 施肥
+                        2 -> ActivityType.PRUNING     // 修剪
+                        3 -> ActivityType.TREATMENT   // 治疗
+                        4 -> ActivityType.NOTE        // 笔记
+                        else -> ActivityType.NOTE     // 默认
+                    }
+                    
+                    // 持久化保存图片URI
+                    val permanentUri = ImageUtils.getPermamentUri(this, selectedImageUri)
+                    
                     val log = GardenLog(
                         plantId = plantId,
                         activityType = activityType,
                         date = System.currentTimeMillis(),
                         description = description,
-                        imagePath = selectedImageUri?.toString()
+                        imagePath = permanentUri?.toString()
                     )
                     viewModel.addLog(log)
                 }
@@ -155,6 +203,99 @@ class PlantDetailActivity : AppCompatActivity() {
                 logImageDialogCallback = null // Clean up
                 dialog.cancel()
             }
+            .show()
+    }
+
+    private fun showEditLogDialog(log: GardenLog) {
+        val dialogBinding = DialogEditLogBinding.inflate(layoutInflater)
+        var selectedImageUri: Uri? = log.imagePath?.let { Uri.parse(it) }
+
+        val activityTypes = resources.getStringArray(R.array.activity_type_array)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, activityTypes)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        dialogBinding.spinnerActivityType.adapter = adapter
+        
+        // 设置当前值
+        dialogBinding.etLogDescription.setText(log.description)
+        val position = when (log.activityType) {
+            ActivityType.WATERING -> 0
+            ActivityType.FERTILIZING -> 1
+            ActivityType.PRUNING -> 2
+            ActivityType.TREATMENT -> 3
+            ActivityType.NOTE -> 4
+            else -> 4 // 默认笔记
+        }
+        dialogBinding.spinnerActivityType.setSelection(position)
+        
+        // 加载图片预览（如果有）
+        log.imagePath?.let { path ->
+            dialogBinding.ivLogImagePreview.visibility = View.VISIBLE
+            dialogBinding.ivLogImagePreview.load(Uri.parse(path))
+        }
+
+        logImageDialogCallback = { uri ->
+            selectedImageUri = uri
+            dialogBinding.ivLogImagePreview.visibility = View.VISIBLE
+            dialogBinding.ivLogImagePreview.load(uri)
+        }
+
+        dialogBinding.btnAddLogImage.setOnClickListener {
+            checkPermissionAndShowDialog()
+        }
+
+        AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .setTitle("编辑记录")
+            .setPositiveButton("保存") { _, _ ->
+                val description = dialogBinding.etLogDescription.text.toString().trim()
+                if (description.isNotEmpty()) {
+                    val spinnerPosition = dialogBinding.spinnerActivityType.selectedItemPosition
+                    val activityType = when(spinnerPosition) {
+                        0 -> ActivityType.WATERING    // 浇水
+                        1 -> ActivityType.FERTILIZING // 施肥
+                        2 -> ActivityType.PRUNING     // 修剪
+                        3 -> ActivityType.TREATMENT   // 治疗
+                        4 -> ActivityType.NOTE        // 笔记
+                        else -> ActivityType.NOTE     // 默认
+                    }
+                    
+                    // 持久化保存图片URI
+                    val permanentUri = ImageUtils.getPermamentUri(this, selectedImageUri)
+                    
+                    val updatedLog = log.copy(
+                        activityType = activityType,
+                        description = description,
+                        imagePath = permanentUri?.toString()
+                    )
+                    viewModel.updateLog(updatedLog)
+                }
+            }
+            .setNegativeButton("取消") { dialog, _ ->
+                logImageDialogCallback = null // Clean up
+                dialog.cancel()
+            }
+            .show()
+    }
+    
+    private fun showDeleteLogConfirmation(log: GardenLog) {
+        AlertDialog.Builder(this)
+            .setTitle("删除记录")
+            .setMessage("确定要删除这条记录吗？此操作不可撤销。")
+            .setPositiveButton("删除") { _, _ ->
+                viewModel.deleteLog(log)
+            }
+            .setNegativeButton("取消", null)
+            .show()
+    }
+    
+    private fun showDeleteDiagnosisConfirmation(diagnosis: TimelineItem.Diagnosis) {
+        AlertDialog.Builder(this)
+            .setTitle("删除诊断记录")
+            .setMessage("确定要删除这条诊断记录吗？此操作不可撤销，同时会删除对应的诊断历史。")
+            .setPositiveButton("删除") { _, _ ->
+                viewModel.deleteDiagnosis(diagnosis)
+            }
+            .setNegativeButton("取消", null)
             .show()
     }
 

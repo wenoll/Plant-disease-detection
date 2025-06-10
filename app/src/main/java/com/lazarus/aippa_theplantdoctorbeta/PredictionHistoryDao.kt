@@ -28,6 +28,9 @@ interface PredictionHistoryDao {
     @Query("SELECT * from history_table WHERE id = :id")
     suspend fun getHistoryById(id: Long): PredictionHistory?
 
+    @Query("SELECT * FROM history_table WHERE plant_id = :plantId")
+    fun getPredictionsForPlant(plantId: Long): LiveData<List<PredictionHistory>>
+
     @Query("DELETE FROM history_table")
     suspend fun clear()
 } 

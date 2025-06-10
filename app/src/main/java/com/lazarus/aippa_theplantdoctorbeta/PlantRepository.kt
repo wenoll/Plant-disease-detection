@@ -26,6 +26,18 @@ class PlantRepository(
     suspend fun insertGardenLog(gardenLog: GardenLog) {
         gardenLogDao.insert(gardenLog)
     }
+    
+    suspend fun updateGardenLog(gardenLog: GardenLog) {
+        gardenLogDao.update(gardenLog)
+    }
+    
+    suspend fun deleteGardenLog(gardenLog: GardenLog) {
+        gardenLogDao.delete(gardenLog)
+    }
+    
+    suspend fun getLogById(logId: Long): GardenLog? {
+        return gardenLogDao.getLogById(logId)
+    }
 
     suspend fun getPlant(id: Long): Plant? {
         return plantDao.getPlant(id)
@@ -33,5 +45,13 @@ class PlantRepository(
 
     fun getLogsForPlant(plantId: Long): LiveData<List<GardenLog>> {
         return gardenLogDao.getLogsForPlant(plantId)
+    }
+    
+    fun getPredictionsForPlant(plantId: Long): LiveData<List<PredictionHistory>> {
+        return predictionHistoryDao.getPredictionsForPlant(plantId)
+    }
+    
+    suspend fun deletePrediction(prediction: PredictionHistory) {
+        predictionHistoryDao.delete(prediction)
     }
 } 

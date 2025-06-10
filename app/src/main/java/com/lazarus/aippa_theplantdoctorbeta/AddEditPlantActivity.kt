@@ -16,6 +16,7 @@ import coil.load
 import com.lazarus.aippa_theplantdoctorbeta.databinding.ActivityAddEditPlantBinding
 import kotlinx.coroutines.launch
 import java.io.File
+import com.lazarus.aippa_theplantdoctorbeta.utils.ImageUtils
 
 class AddEditPlantActivity : AppCompatActivity() {
 
@@ -138,13 +139,17 @@ class AddEditPlantActivity : AppCompatActivity() {
             return
         }
 
+        // 持久化保存图片URI
+        val permanentUri = ImageUtils.getPermamentUri(this, currentImageUri)
+        
+        // 保存植物信息
         val plant = Plant(
             id = if (currentPlantId == INVALID_PLANT_ID) 0 else currentPlantId,
             name = name,
             variety = variety,
             plantingDate = System.currentTimeMillis(),
             location = location,
-            imagePath = currentImageUri?.toString()
+            imagePath = permanentUri?.toString()
         )
 
         viewModel.insert(plant)

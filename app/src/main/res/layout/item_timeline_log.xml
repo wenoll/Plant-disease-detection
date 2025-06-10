@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <!-- Timeline Vertical Line -->
+    <View
+        android:id="@+id/timeline_line_top"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/timeline_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"/>
+
+    <View
+        android:id="@+id/timeline_line_bottom"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/timeline_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"/>
+
+    <!-- Icon -->
+    <ImageView
+        android:id="@+id/timeline_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="13dp"
+        tools:src="@drawable/ic_water_drop"
+        android:contentDescription="@string/image_description"/>
+
+    <!-- Card with Content -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/log_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toEndOf="@id/timeline_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:cardElevation="2dp"
+        app:contentPadding="12dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- 活动类型标题和更多按钮 -->
+            <TextView
+                android:id="@+id/tv_activity_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_more_options"
+                tools:text="浇水" />
+
+            <ImageButton
+                android:id="@+id/btn_more_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="更多选项"
+                android:padding="4dp"
+                android:src="@drawable/ic_more_vert"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- 可展开的描述文本区域 -->
+            <LinearLayout
+                android:id="@+id/description_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/tv_activity_type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                
+                <TextView
+                    android:id="@+id/tv_log_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    tools:text="给植物浇了500毫升水，土壤略干，浇水后稍微松了松土，顺便施了一点肥，天气晴朗，光照充足，植物长势良好。" />
+                
+                <TextView
+                    android:id="@+id/tv_expand_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="展开"
+                    android:textColor="?attr/colorPrimary"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+            <!-- 可选的图片区域 -->
+            <ImageView
+                android:id="@+id/iv_log_image"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:src="@drawable/ic_plant_placeholder"
+                android:contentDescription="@string/image_description"
+                app:layout_constraintTop_toBottomOf="@id/description_container"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_log_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?attr/textAppearanceCaption"
+                tools:text="2023-10-27"
+                app:layout_constraintTop_toBottomOf="@id/iv_log_image"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout> 
