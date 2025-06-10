@@ -39,5 +39,6 @@ data class GardenLog(
     val activityType: ActivityType,
     val date: Long,
     val description: String,
-    val predictionId: Long? = null
+    val predictionId: Long? = null,
+    val imagePath: String? = null // To store image path for DIAGNOSIS type logs
 ) 

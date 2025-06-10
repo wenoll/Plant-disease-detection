@@ -141,4 +141,14 @@
     <!-- Permission Handling -->
     <string name="camera_permission_required">Camera permission is required to use this feature. Please grant permission in settings.</string>
     <string name="camera_permission_required_toast">Camera permission is needed to use the live camera. You can grant it in the app settings.</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="dialog_delete_plant_title">Delete Plant</string>
+    <string name="dialog_delete_plant_message">Are you sure you want to delete this plant and all its logs? This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_delete_history_title">Delete Prediction</string>
+    <string name="dialog_delete_history_message">Are you sure you want to delete this prediction from your history?</string>
+    <string name="action_add_photo">Add Photo</string>
+    <string name="dialog_select_image_title">Select Image Source</string>
 </resources>

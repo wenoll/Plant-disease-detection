@@ -1,8 +1,11 @@
 package com.lazarus.aippa_theplantdoctorbeta
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.lazarus.aippa_theplantdoctorbeta.databinding.ItemLogEntryBinding
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,25 +26,58 @@ class LogAdapter(private var logs: List<GardenLog>) : RecyclerView.Adapter<LogAd
 
     fun updateData(newLogs: List<GardenLog>) {
         logs = newLogs
-        notifyDataSetChanged() // For a real app, use DiffUtil
+        notifyDataSetChanged()
     }
 
     class LogViewHolder(private val binding: ItemLogEntryBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val dateFormatter = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+        private val dateFormatter = SimpleDateFormat("MMMM dd, yyyy, HH:mm", Locale.getDefault())
+        private var isExpanded = false
 
         fun bind(log: GardenLog) {
             binding.tvLogDescription.text = log.description
             binding.tvLogDate.text = dateFormatter.format(Date(log.date))
 
-            val iconRes = when (log.activityType) {
-                ActivityType.DIAGNOSIS -> R.drawable.ic_diagnosis
-                ActivityType.WATERING -> R.drawable.ic_watering
-                ActivityType.FERTILIZING -> R.drawable.ic_fertilizing
-                ActivityType.PRUNING -> R.drawable.ic_pruning
-                ActivityType.TREATMENT -> R.drawable.ic_treatment
-                ActivityType.NOTE -> R.drawable.ic_note
+            // Default state for description text
+            binding.tvLogDescription.maxLines = 2
+            isExpanded = false
+            binding.tvLogDescription.setOnClickListener {
+                isExpanded = !isExpanded
+                binding.tvLogDescription.maxLines = if (isExpanded) Int.MAX_VALUE else 2
             }
-            binding.ivLogIcon.setImageResource(iconRes)
+
+            if (log.activityType == ActivityType.DIAGNOSIS) {
+                // Load image using Coil if path is not null
+                log.imagePath?.let {
+                    binding.ivLogIcon.load(it) {
+                        crossfade(true)
+                        placeholder(R.drawable.ic_plant_placeholder) // Optional placeholder
+                        error(R.drawable.ic_broken_image) // Optional error image
+                    }
+                } ?: binding.ivLogIcon.setImageResource(R.drawable.ic_diagnosis) // Fallback icon
+
+                // Set click listener to open prediction details
+                itemView.setOnClickListener {
+                    log.predictionId?.let { id ->
+                        val context = itemView.context
+                        val intent = Intent(context, DetailsActivity::class.java).apply {
+                            putExtra(DetailsActivity.EXTRA_HISTORY_ID, id)
+                        }
+                        context.startActivity(intent)
+                    }
+                }
+            } else {
+                // Handle other log types
+                val iconRes = when (log.activityType) {
+                    ActivityType.WATERING -> R.drawable.ic_watering
+                    ActivityType.FERTILIZING -> R.drawable.ic_fertilizing
+                    ActivityType.PRUNING -> R.drawable.ic_pruning
+                    ActivityType.TREATMENT -> R.drawable.ic_treatment
+                    ActivityType.NOTE -> R.drawable.ic_note
+                    else -> R.drawable.ic_note // Should not happen for DIAGNOSIS here
+                }
+                binding.ivLogIcon.setImageResource(iconRes)
+                itemView.setOnClickListener(null) // Remove click listener for non-diagnosis logs
+            }
         }
     }
 } 

@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey
  * @param variety 植物的品种 (例如 "绿萝")
  * @param plantingDate 种植日期，以毫秒为单位的时间戳
  * @param location 种植位置 (例如 "客厅窗台")
+ * @param imagePath Path to the plant's image
  * @param notes 备注信息
  */
 @Entity(tableName = "plants")
@@ -21,5 +22,6 @@ data class Plant(
     val variety: String,
     val plantingDate: Long,
     val location: String,
+    val imagePath: String? = null,
     val notes: String? = null
 ) 

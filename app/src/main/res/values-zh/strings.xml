@@ -121,4 +121,15 @@
     <string name="report_disease_frequency_subtitle">本年度所有诊断出的病害摘要。</string>
     <string name="report_analysis_title">分析与建议</string>
     <string name="action_generate_report">生成年度报告</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_delete">删除</string>
+    <string name="dialog_delete_plant_title">删除植物</string>
+    <string name="dialog_delete_plant_message">您确定要删除这株植物及其所有日志吗？此操作无法撤销。</string>
+
+    <string name="delete">删除</string>
+    <string name="cancel">取消</string>
+    <string name="dialog_delete_history_title">删除预测记录</string>
+    <string name="dialog_delete_history_message">您确定要从历史记录中删除这条预测吗？</string>
+    <string name="action_add_photo">添加照片</string>
+    <string name="dialog_select_image_title">选择图片来源</string>
 </resources> 

@@ -37,4 +37,8 @@ class GardenViewModel(application: Application) : AndroidViewModel(application) 
     fun getLogsForPlant(plantId: Long): LiveData<List<GardenLog>> {
         return repository.getLogsForPlant(plantId)
     }
+
+    suspend fun getPlant(id: Long): Plant? {
+        return repository.getPlant(id)
+    }
 } 

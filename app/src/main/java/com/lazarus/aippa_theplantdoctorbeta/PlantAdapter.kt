@@ -1,10 +1,11 @@
 package com.lazarus.aippa_theplantdoctorbeta
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.lazarus.aippa_theplantdoctorbeta.databinding.ItemPlantBinding
-import android.content.Intent
 
 class PlantAdapter(private var plants: List<Plant>) : RecyclerView.Adapter<PlantAdapter.PlantViewHolder>() {
 
@@ -30,6 +31,15 @@ class PlantAdapter(private var plants: List<Plant>) : RecyclerView.Adapter<Plant
             binding.tvPlantVariety.text = plant.variety
             binding.tvPlantLocation.text = plant.location
 
+            plant.imagePath?.let { path ->
+                binding.ivPlantIcon.load(path) {
+                    crossfade(true)
+                    placeholder(R.drawable.ic_plant_placeholder)
+                    error(R.drawable.ic_broken_image)
+                }
+            } ?: binding.ivPlantIcon.setImageResource(R.drawable.ic_plant_placeholder)
+
+
             itemView.setOnClickListener {
                 val context = it.context
                 val intent = Intent(context, PlantDetailActivity::class.java).apply {
@@ -39,4 +49,4 @@ class PlantAdapter(private var plants: List<Plant>) : RecyclerView.Adapter<Plant
             }
         }
     }
-} 
+}
